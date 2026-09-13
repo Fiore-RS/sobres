@@ -1,4 +1,19 @@
 import { useState } from 'react'
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useSobresStore } from '../lib/store'
 import { formatColones, formatPorcentaje } from '../lib/format'
 import { Header } from '../assets/components/organisms/Header'
@@ -41,6 +56,113 @@ const FORM_VACIO: FormSobre = {
   saldo: '0',
 }
 
+interface FilaSobreProps {
+  sobre: Sobre
+  menuAbierto: boolean
+  onToggleMenu: () => void
+  onCerrarMenu: () => void
+  onEditar: () => void
+  onArchivar: () => void
+  onEliminar: () => void
+}
+
+function FilaSobre({
+  sobre,
+  menuAbierto,
+  onToggleMenu,
+  onCerrarMenu,
+  onEditar,
+  onArchivar,
+  onEliminar,
+}: FilaSobreProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: sobre.id,
+  })
+  const Icono = iconoDeSobre(sobre.icono)
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-2.5 rounded-2xl border border-border bg-surface p-3 ${
+        isDragging ? 'relative z-20 shadow-lg' : ''
+      }`}
+    >
+      <button
+        type="button"
+        {...attributes}
+        {...listeners}
+        aria-label={`Reordenar ${sobre.nombre}`}
+        className="flex h-7 w-7 shrink-0 touch-none items-center justify-center text-ink-faint active:cursor-grabbing"
+      >
+        <DragHandleIcon size={14} />
+      </button>
+      <IconBadge color={sobre.color} size={30}>
+        <Icono size={15} />
+      </IconBadge>
+      <div className="min-w-0 flex-1">
+        <div className="font-display font-semibold text-sm">{sobre.nombre}</div>
+        <div className="text-[11px] text-ink-faint">Saldo {formatColones(sobre.saldoActual)}</div>
+      </div>
+      <div className="text-[12.5px] font-semibold text-ink-soft shrink-0">
+        {formatPorcentaje(sobre.prioridad)}
+      </div>
+
+      <div className="relative shrink-0">
+        <button
+          type="button"
+          onClick={onToggleMenu}
+          aria-label={`Opciones de ${sobre.nombre}`}
+          className="flex h-7 w-7 items-center justify-center text-ink-faint"
+        >
+          <DotsIcon size={15} />
+        </button>
+
+        {menuAbierto && (
+          <>
+            <button
+              type="button"
+              aria-label="Cerrar menú"
+              onClick={onCerrarMenu}
+              className="fixed inset-0 z-10 cursor-default"
+            />
+            <div className="absolute right-0 top-full z-20 mt-1 flex w-36 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
+              <button
+                type="button"
+                onClick={onEditar}
+                className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                onClick={onArchivar}
+                className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+              >
+                Archivar
+              </button>
+              {sobre.saldoActual === 0 && (
+                <button
+                  type="button"
+                  onClick={onEliminar}
+                  className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+                >
+                  Eliminar
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function GestionSobres() {
   const {
     sobres,
@@ -50,12 +172,26 @@ export function GestionSobres() {
     archivarSobre,
     eliminarSobre,
     agregarSobre,
+    reordenarSobres,
   } = useSobresStore()
   const activos = sobres.filter((s) => !s.archivado).sort((a, b) => a.orden - b.orden)
 
   const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null)
   const [modalAbierto, setModalAbierto] = useState(false)
   const [form, setForm] = useState<FormSobre>(FORM_VACIO)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+  )
+
+  function onDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const oldIndex = activos.findIndex((s) => s.id === active.id)
+    const newIndex = activos.findIndex((s) => s.id === over.id)
+    if (oldIndex === -1 || newIndex === -1) return
+    reordenarSobres(arrayMove(activos, oldIndex, newIndex).map((s) => s.id))
+  }
 
   function abrirModalNuevo() {
     setForm(FORM_VACIO)
@@ -118,77 +254,27 @@ export function GestionSobres() {
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-4 flex flex-col gap-2.5">
-        {activos.map((sobre) => {
-          const Icono = iconoDeSobre(sobre.icono)
-          const menuAbierto = menuAbiertoId === sobre.id
-          return (
-            <div
-              key={sobre.id}
-              className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface p-3"
-            >
-              <DragHandleIcon size={14} className="text-ink-faint shrink-0" />
-              <IconBadge color={sobre.color} size={30}>
-                <Icono size={15} />
-              </IconBadge>
-              <div className="min-w-0 flex-1">
-                <div className="font-display font-semibold text-sm">{sobre.nombre}</div>
-                <div className="text-[11px] text-ink-faint">
-                  Saldo {formatColones(sobre.saldoActual)}
-                </div>
-              </div>
-              <div className="text-[12.5px] font-semibold text-ink-soft shrink-0">
-                {formatPorcentaje(sobre.prioridad)}
-              </div>
-
-              <div className="relative shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setMenuAbiertoId(menuAbierto ? null : sobre.id)}
-                  aria-label={`Opciones de ${sobre.nombre}`}
-                  className="flex h-7 w-7 items-center justify-center text-ink-faint"
-                >
-                  <DotsIcon size={15} />
-                </button>
-
-                {menuAbierto && (
-                  <>
-                    <button
-                      type="button"
-                      aria-label="Cerrar menú"
-                      onClick={() => setMenuAbiertoId(null)}
-                      className="fixed inset-0 z-10 cursor-default"
-                    />
-                    <div className="absolute right-0 top-full z-20 mt-1 flex w-36 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
-                      <button
-                        type="button"
-                        onClick={() => abrirModalEditar(sobre)}
-                        className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => archivar(sobre)}
-                        className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
-                      >
-                        Archivar
-                      </button>
-                      {sobre.saldoActual === 0 && (
-                        <button
-                          type="button"
-                          onClick={() => eliminar(sobre)}
-                          className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
-                        >
-                          Eliminar
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )
-        })}
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext
+            items={activos.map((s) => s.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {activos.map((sobre) => (
+              <FilaSobre
+                key={sobre.id}
+                sobre={sobre}
+                menuAbierto={menuAbiertoId === sobre.id}
+                onToggleMenu={() =>
+                  setMenuAbiertoId((prev) => (prev === sobre.id ? null : sobre.id))
+                }
+                onCerrarMenu={() => setMenuAbiertoId(null)}
+                onEditar={() => abrirModalEditar(sobre)}
+                onArchivar={() => archivar(sobre)}
+                onEliminar={() => eliminar(sobre)}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
 
       <div className="shrink-0 border-t border-border bg-bg px-5 pb-6 pt-3.5">

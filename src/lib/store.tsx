@@ -29,6 +29,7 @@ interface SobresStoreValue {
   archivarSobre: (id: string) => void
   reactivarSobre: (id: string) => void
   eliminarSobre: (id: string) => boolean
+  reordenarSobres: (idsEnOrden: string[]) => void
 
   registrarIngreso: (montoTotal: number, sobreIds: string[], nota?: string) => void
   registrarGasto: (sobreId: string, monto: number, nota?: string) => void
@@ -162,6 +163,18 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
       setMovimientos((prev) => prev.filter((m) => m.id !== movimientoId))
     }
 
+    function reordenarSobres(idsEnOrden: string[]) {
+      // Reasigna 'orden' 0..n-1 según el nuevo orden dado (típicamente tras un
+      // drag-and-drop). Sobres que no vengan en la lista (p. ej. archivados)
+      // mantienen su 'orden' actual.
+      setSobres((prev) =>
+        prev.map((s) => {
+          const nuevoIndice = idsEnOrden.indexOf(s.id)
+          return nuevoIndice === -1 ? s : { ...s, orden: nuevoIndice }
+        }),
+      )
+    }
+
     function reiniciarRegistro() {
       // Deja los sobres tal cual (nombre, prioridad, color, ícono, meta) pero
       // en saldo cero, y borra todo el historial de movimientos. Pensado para
@@ -196,6 +209,7 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
       archivarSobre,
       reactivarSobre,
       eliminarSobre,
+      reordenarSobres,
       registrarIngreso,
       registrarGasto,
       eliminarMovimiento,
