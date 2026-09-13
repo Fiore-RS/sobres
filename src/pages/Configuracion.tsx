@@ -103,7 +103,7 @@ export function Configuracion() {
             onClick={exportar}
             className="flex items-center gap-3 rounded-2xl border-[1.5px] border-green px-4 py-3.5 text-green"
           >
-            <DownloadIcon size={17} />
+            <UploadIcon size={17} />
             <span className="text-sm font-semibold">Exportar respaldo</span>
           </button>
 
@@ -112,7 +112,7 @@ export function Configuracion() {
             onClick={elegirArchivoImportar}
             className="flex items-center gap-3 rounded-2xl border border-border px-4 py-3.5"
           >
-            <UploadIcon size={17} />
+            <DownloadIcon size={17} />
             <span className="text-sm font-semibold">Importar respaldo</span>
           </button>
           <input

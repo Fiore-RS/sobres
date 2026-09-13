@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => ({
         description:
           'Guía visual para repartir tus ingresos por sobres, según tus propias prioridades.',
         theme_color: '#2f5a42',
-        background_color: '#f7f5f0',
+        background_color: '#2f5a42',
         display: 'standalone',
         start_url: '.',
         scope: '.',
