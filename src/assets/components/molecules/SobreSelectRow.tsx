@@ -1,5 +1,7 @@
 import { CheckIcon } from '../atoms/Icon'
 import { formatPorcentaje } from '../../../lib/format'
+import type { SobreColor } from '../../../types'
+import { CLASE_SELECCION, CLASE_SOLIDA } from '../../../lib/colores'
 
 interface SobreSelectRowProps {
   nombre: string
@@ -7,7 +9,7 @@ interface SobreSelectRowProps {
   seleccionado: boolean
   onToggle: () => void
   tipo?: 'checkbox' | 'radio'
-  color?: 'green' | 'celeste'
+  color?: SobreColor
 }
 
 export function SobreSelectRow({
@@ -18,21 +20,21 @@ export function SobreSelectRow({
   tipo = 'checkbox',
   color = 'green',
 }: SobreSelectRowProps) {
-  const bgSeleccionado = color === 'green' ? 'bg-green-soft border-green-mid' : 'bg-celeste-soft border-celeste-mid'
-  const marcaSeleccionado = color === 'green' ? 'bg-green' : 'border-[5px] border-celeste bg-surface'
+  const fondoSeleccionado = CLASE_SELECCION[color]
+  const marcaSeleccionada = CLASE_SOLIDA[color]
 
   return (
     <button
       type="button"
       onClick={onToggle}
       className={`flex items-center gap-3 rounded-2xl border px-3.5 py-3 text-left ${
-        seleccionado ? bgSeleccionado : 'bg-surface border-border'
+        seleccionado ? fondoSeleccionado : 'bg-surface border-border'
       }`}
     >
       {tipo === 'checkbox' ? (
         <span
           className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
-            seleccionado ? 'bg-green' : 'border-[1.5px] border-border'
+            seleccionado ? marcaSeleccionada : 'border-[1.5px] border-border'
           }`}
         >
           {seleccionado && <CheckIcon size={13} className="text-surface" strokeWidth={2.6} />}
@@ -40,7 +42,7 @@ export function SobreSelectRow({
       ) : (
         <span
           className={`h-[18px] w-[18px] shrink-0 rounded-full ${
-            seleccionado ? marcaSeleccionado : 'border-[1.5px] border-border'
+            seleccionado ? marcaSeleccionada : 'border-[1.5px] border-border'
           }`}
         />
       )}

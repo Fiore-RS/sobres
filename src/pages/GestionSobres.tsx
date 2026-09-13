@@ -27,6 +27,7 @@ import {
   PlusIcon,
   iconoDeSobre,
 } from '../assets/components/atoms/Icon'
+import { COLORES_SOBRE, CLASE_SOLIDA, NOMBRE_COLOR } from '../lib/colores'
 import type { Sobre, SobreIcono } from '../types'
 
 const ICONOS_DISPONIBLES: SobreIcono[] = [
@@ -36,6 +37,16 @@ const ICONOS_DISPONIBLES: SobreIcono[] = [
   'escudo',
   'casa',
   'estrella',
+  'corazon',
+  'carrito',
+  'comida',
+  'auto',
+  'regalo',
+  'maleta',
+  'cruz',
+  'musica',
+  'libro',
+  'mascota',
 ]
 
 interface FormSobre {
@@ -299,39 +310,54 @@ export function GestionSobres() {
             placeholder="Nombre del sobre"
             className="rounded-xl border border-border px-3 py-2.5 text-sm outline-none placeholder:text-ink-faint"
           />
-          <div className="flex gap-2.5">
-            <input
-              type="number"
-              value={form.prioridad}
-              onChange={(e) => setForm((f) => ({ ...f, prioridad: e.target.value }))}
-              placeholder="% prioridad"
-              className="w-28 rounded-xl border border-border px-3 py-2.5 text-sm outline-none placeholder:text-ink-faint"
-            />
-            <select
-              value={form.color}
-              onChange={(e) => setForm((f) => ({ ...f, color: e.target.value as Sobre['color'] }))}
-              className="flex-1 rounded-xl border border-border px-3 py-2.5 text-sm outline-none"
-            >
-              <option value="green">Verde</option>
-              <option value="celeste">Celeste</option>
-            </select>
-          </div>
-          <div className="flex gap-2">
-            {ICONOS_DISPONIBLES.map((ic) => {
-              const IconoOpcion = iconoDeSobre(ic)
-              return (
+          <input
+            type="number"
+            value={form.prioridad}
+            onChange={(e) => setForm((f) => ({ ...f, prioridad: e.target.value }))}
+            placeholder="% prioridad"
+            className="rounded-xl border border-border px-3 py-2.5 text-sm outline-none placeholder:text-ink-faint"
+          />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[12.5px] font-semibold text-ink-soft">Color</label>
+            <div className="flex flex-wrap gap-2">
+              {COLORES_SOBRE.map((c) => (
                 <button
-                  key={ic}
+                  key={c}
                   type="button"
-                  onClick={() => setForm((f) => ({ ...f, icono: ic }))}
-                  className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                    form.icono === ic ? 'bg-green text-surface' : 'bg-surface-2 text-ink-soft'
+                  onClick={() => setForm((f) => ({ ...f, color: c }))}
+                  aria-label={NOMBRE_COLOR[c]}
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${CLASE_SOLIDA[c]} ${
+                    form.color === c ? 'ring-2 ring-ink ring-offset-2 ring-offset-bg' : ''
                   }`}
                 >
-                  <IconoOpcion size={16} />
+                  {form.color === c && (
+                    <CheckIcon size={13} className="text-surface" strokeWidth={2.8} />
+                  )}
                 </button>
-              )
-            })}
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[12.5px] font-semibold text-ink-soft">Ícono</label>
+            <div className="flex flex-wrap gap-2">
+              {ICONOS_DISPONIBLES.map((ic) => {
+                const IconoOpcion = iconoDeSobre(ic)
+                return (
+                  <button
+                    key={ic}
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, icono: ic }))}
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                      form.icono === ic ? 'bg-green text-surface' : 'bg-surface-2 text-ink-soft'
+                    }`}
+                  >
+                    <IconoOpcion size={16} />
+                  </button>
+                )
+              })}
+            </div>
           </div>
           {form.editandoId && (
             <div className="flex flex-col gap-1.5 border-t border-border pt-3.5">

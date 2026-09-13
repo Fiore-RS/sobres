@@ -1,13 +1,16 @@
 import type { ReactNode } from 'react'
+import type { SobreColor } from '../../../types'
+import { CLASE_SUAVE } from '../../../lib/colores'
+
+type PillColor = SobreColor | 'neutral' | 'active'
 
 interface PillProps {
-  color?: 'green' | 'celeste' | 'neutral' | 'active'
+  color?: PillColor
   children: ReactNode
 }
 
-const STYLES: Record<NonNullable<PillProps['color']>, string> = {
-  green: 'bg-green-soft text-green',
-  celeste: 'bg-celeste-soft text-celeste',
+const STYLES: Record<PillColor, string> = {
+  ...CLASE_SUAVE,
   neutral: 'bg-surface border border-border text-ink-soft',
   active: 'bg-green text-surface',
 }

@@ -14,8 +14,14 @@ function formatearFechaRelativa(timestamp?: number): string {
   return `Último respaldo: hace ${dias} días`
 }
 
+const OPCIONES_TEMA = [
+  ['claro', 'Claro'],
+  ['oscuro', 'Oscuro'],
+  ['sistema', 'Sistema'],
+] as const
+
 export function Configuracion() {
-  const { exportarRespaldo, importarRespaldo, ultimoRespaldo, reiniciarRegistro } =
+  const { exportarRespaldo, importarRespaldo, ultimoRespaldo, reiniciarRegistro, tema, setTema } =
     useSobresStore()
   const inputRef = useRef<HTMLInputElement>(null)
   const [confirmarReinicioAbierto, setConfirmarReinicioAbierto] = useState(false)
@@ -64,6 +70,31 @@ export function Configuracion() {
     <>
       <Header titulo="Configuración" />
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-5 pb-6 flex flex-col gap-6">
+        <div className="flex flex-col gap-2.5">
+          <div className="text-[12.5px] text-ink-faint">Apariencia</div>
+          <div className="flex gap-2">
+            {OPCIONES_TEMA.map(([valor, etiqueta]) => (
+              <button
+                key={valor}
+                type="button"
+                onClick={() => setTema(valor)}
+                className={`flex-1 rounded-full px-3.5 py-2 text-[12.5px] ${
+                  tema === valor
+                    ? 'bg-green font-semibold text-surface'
+                    : 'border border-border bg-surface font-medium text-ink-soft'
+                }`}
+              >
+                {etiqueta}
+              </button>
+            ))}
+          </div>
+          <div className="px-0.5 text-[11.5px] text-ink-faint">
+            "Sistema" sigue el modo claro/oscuro configurado en tu teléfono o navegador.
+          </div>
+        </div>
+
+        <div className="h-px bg-border" />
+
         <div className="flex flex-col gap-2.5">
           <div className="text-[12.5px] text-ink-faint">Respaldo</div>
 

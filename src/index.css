@@ -24,10 +24,91 @@
   --color-celeste-mid: oklch(62% 0.1 227);
   --color-celeste-soft: oklch(91% 0.03 227);
 
+  /* Colores adicionales para etiquetar sobres (10 en total con verde/celeste). */
+  --color-azul: oklch(48% 0.11 255);
+  --color-azul-mid: oklch(60% 0.12 255);
+  --color-azul-soft: oklch(91% 0.03 255);
+
+  --color-morado: oklch(50% 0.12 300);
+  --color-morado-mid: oklch(62% 0.12 300);
+  --color-morado-soft: oklch(91% 0.03 300);
+
+  --color-rosa: oklch(55% 0.13 345);
+  --color-rosa-mid: oklch(67% 0.12 345);
+  --color-rosa-soft: oklch(92% 0.035 345);
+
+  --color-rojo: oklch(52% 0.15 25);
+  --color-rojo-mid: oklch(64% 0.14 25);
+  --color-rojo-soft: oklch(91% 0.04 25);
+
+  --color-naranja: oklch(60% 0.14 50);
+  --color-naranja-mid: oklch(70% 0.13 50);
+  --color-naranja-soft: oklch(92% 0.04 50);
+
+  --color-amarillo: oklch(68% 0.12 85);
+  --color-amarillo-mid: oklch(76% 0.11 85);
+  --color-amarillo-soft: oklch(93% 0.035 85);
+
+  --color-oliva: oklch(45% 0.08 130);
+  --color-oliva-mid: oklch(58% 0.09 130);
+  --color-oliva-soft: oklch(90% 0.03 130);
+
+  --color-gris: oklch(50% 0.02 260);
+  --color-gris-mid: oklch(62% 0.02 260);
+  --color-gris-soft: oklch(92% 0.01 260);
+
   --color-border: oklch(89% 0.015 160);
 
   --font-display: "Fraunces", serif;
   --font-sans: "IBM Plex Sans", sans-serif;
+}
+
+/*
+  Modo oscuro: se activa agregando la clase .dark al <html> (ver
+  src/lib/store.tsx). Como los componentes ya usan los tokens semánticos
+  (bg-bg, bg-surface, text-ink, border-border, bg-<color>-soft, etc.) en vez
+  de valores fijos, con solo redefinir estas variables dentro de .dark toda
+  la app cambia de tema sin tocar un solo componente.
+*/
+.dark {
+  --color-bg: oklch(18% 0.02 160);
+  --color-surface: oklch(23% 0.02 160);
+  --color-surface-2: oklch(27% 0.02 160);
+
+  --color-ink: oklch(93% 0.015 85);
+  --color-ink-soft: oklch(75% 0.02 85);
+  --color-ink-faint: oklch(55% 0.02 85);
+
+  --color-border: oklch(32% 0.02 160);
+
+  /* Los tonos "soft" en claro son casi blancos; en oscuro se oscurecen para
+     seguir leyéndose como una tarjeta de color sobre fondo oscuro. */
+  --color-green-soft: oklch(30% 0.06 152);
+  --color-celeste-soft: oklch(30% 0.06 227);
+  --color-azul-soft: oklch(30% 0.07 255);
+  --color-morado-soft: oklch(32% 0.07 300);
+  --color-rosa-soft: oklch(33% 0.08 345);
+  --color-rojo-soft: oklch(32% 0.09 25);
+  --color-naranja-soft: oklch(35% 0.08 50);
+  --color-amarillo-soft: oklch(38% 0.07 85);
+  --color-oliva-soft: oklch(30% 0.05 130);
+  --color-gris-soft: oklch(32% 0.015 260);
+
+  /* Los tonos "base" en claro son bastante oscuros (pensados para leerse
+     sobre un "-soft" casi blanco). En oscuro el "-soft" se invierte a un
+     tono oscuro, así que el "base" también se aclara — si no, el ícono/texto
+     queda casi del mismo tono que su fondo y se pierde. Se sube luminosidad
+     y un poco de croma para que se sigan viendo vívidos, no lavados. */
+  --color-green: oklch(72% 0.11 152);
+  --color-celeste: oklch(74% 0.1 227);
+  --color-azul: oklch(72% 0.12 255);
+  --color-morado: oklch(74% 0.13 300);
+  --color-rosa: oklch(78% 0.13 345);
+  --color-rojo: oklch(72% 0.16 25);
+  --color-naranja: oklch(78% 0.14 50);
+  --color-amarillo: oklch(82% 0.12 85);
+  --color-oliva: oklch(70% 0.09 130);
+  --color-gris: oklch(72% 0.02 260);
 }
 
 html,

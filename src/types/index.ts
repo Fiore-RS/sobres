@@ -1,7 +1,7 @@
 export interface Sobre {
   id: string
   nombre: string
-  color: 'green' | 'celeste'
+  color: SobreColor
   icono: SobreIcono
   prioridad: number // porcentaje, 0-100, hasta 1 decimal
   saldoActual: number // colones
@@ -11,6 +11,18 @@ export interface Sobre {
   creadoEn: number // timestamp
 }
 
+export type SobreColor =
+  | 'green'
+  | 'celeste'
+  | 'azul'
+  | 'morado'
+  | 'rosa'
+  | 'rojo'
+  | 'naranja'
+  | 'amarillo'
+  | 'oliva'
+  | 'gris'
+
 export type SobreIcono =
   | 'graduacion'
   | 'avion'
@@ -18,6 +30,16 @@ export type SobreIcono =
   | 'escudo'
   | 'casa'
   | 'estrella'
+  | 'corazon'
+  | 'carrito'
+  | 'comida'
+  | 'auto'
+  | 'regalo'
+  | 'maleta'
+  | 'cruz'
+  | 'musica'
+  | 'libro'
+  | 'mascota'
 
 export type TipoMovimiento = 'ingreso_repartido' | 'ajuste_manual'
 
@@ -36,9 +58,12 @@ export interface Movimiento {
   nota?: string
 }
 
+export type Tema = 'claro' | 'oscuro' | 'sistema'
+
 export interface Configuracion {
   moneda: 'CRC'
   ultimoRespaldo?: number // timestamp
+  tema?: Tema // por defecto 'sistema' si no está definido
 }
 
 export interface RespaldoSobres {

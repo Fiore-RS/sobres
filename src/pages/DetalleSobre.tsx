@@ -7,6 +7,7 @@ import { Pill } from '../assets/components/atoms/Pill'
 import { ProgressBar } from '../assets/components/atoms/ProgressBar'
 import { MovimientoRow } from '../assets/components/molecules/MovimientoRow'
 import { iconoDeSobre } from '../assets/components/atoms/Icon'
+import { CLASE_TEXTO } from '../lib/colores'
 
 export function DetalleSobre() {
   const { id } = useParams<{ id: string }>()
@@ -51,7 +52,7 @@ export function DetalleSobre() {
                 {formatColones(sobre.saldoActual)} de {formatColones(sobre.meta)}
               </div>
               {sobre.saldoActual < sobre.meta && (
-                <div className={`text-xs font-semibold ${sobre.color === 'green' ? 'text-green' : 'text-celeste'}`}>
+                <div className={`text-xs font-semibold ${CLASE_TEXTO[sobre.color]}`}>
                   Faltan {formatColones(sobre.meta - sobre.saldoActual)}
                 </div>
               )}

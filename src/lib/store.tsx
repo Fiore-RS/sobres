@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { Movimiento, RespaldoSobres, Sobre } from '../types'
+import type { Movimiento, RespaldoSobres, Sobre, Tema } from '../types'
 import { calcularReparto, aplicarGasto } from './reparto'
 import { cargarEstado, construirRespaldo, guardarEstado } from './storage'
 
@@ -39,6 +39,9 @@ interface SobresStoreValue {
   exportarRespaldo: () => RespaldoSobres
   importarRespaldo: (data: RespaldoSobres) => void
   ultimoRespaldo?: number
+
+  tema: Tema
+  setTema: (tema: Tema) => void
 }
 
 const SobresStoreContext = createContext<SobresStoreValue | null>(null)
@@ -51,14 +54,35 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
   const [ultimoRespaldo, setUltimoRespaldo] = useState<number | undefined>(
     () => cargarEstado().configuracion.ultimoRespaldo,
   )
+  const [tema, setTema] = useState<Tema>(() => cargarEstado().configuracion.tema ?? 'sistema')
 
   useEffect(() => {
     guardarEstado({
       sobres,
       movimientos,
-      configuracion: { moneda: 'CRC', ultimoRespaldo },
+      configuracion: { moneda: 'CRC', ultimoRespaldo, tema },
     })
-  }, [sobres, movimientos, ultimoRespaldo])
+  }, [sobres, movimientos, ultimoRespaldo, tema])
+
+  // Aplica la clase .dark al <html> según la preferencia elegida. En modo
+  // "sistema" sigue (y escucha cambios de) la preferencia del sistema
+  // operativo/navegador en tiempo real.
+  useEffect(() => {
+    const raiz = document.documentElement
+    const medios = window.matchMedia('(prefers-color-scheme: dark)')
+
+    function aplicar() {
+      const oscuro = tema === 'oscuro' || (tema === 'sistema' && medios.matches)
+      raiz.classList.toggle('dark', oscuro)
+    }
+
+    aplicar()
+
+    if (tema === 'sistema') {
+      medios.addEventListener('change', aplicar)
+      return () => medios.removeEventListener('change', aplicar)
+    }
+  }, [tema])
 
   const sumaPrioridadesActivas = useMemo(
     () => sobres.filter((s) => !s.archivado).reduce((acc, s) => acc + s.prioridad, 0),
@@ -187,7 +211,7 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
       const respaldo = construirRespaldo({
         sobres,
         movimientos,
-        configuracion: { moneda: 'CRC', ultimoRespaldo },
+        configuracion: { moneda: 'CRC', ultimoRespaldo, tema },
       })
       setUltimoRespaldo(Date.now())
       return respaldo
@@ -197,6 +221,7 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
       setSobres(data.sobres)
       setMovimientos(data.movimientos)
       setUltimoRespaldo(Date.now())
+      if (data.configuracion.tema) setTema(data.configuracion.tema)
     }
 
     return {
@@ -217,9 +242,11 @@ export function SobresStoreProvider({ children }: { children: ReactNode }) {
       exportarRespaldo,
       importarRespaldo,
       ultimoRespaldo,
+      tema,
+      setTema,
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sobres, movimientos, sumaPrioridadesActivas, ultimoRespaldo])
+  }, [sobres, movimientos, sumaPrioridadesActivas, ultimoRespaldo, tema])
 
   return (
     <SobresStoreContext.Provider value={value}>{children}</SobresStoreContext.Provider>

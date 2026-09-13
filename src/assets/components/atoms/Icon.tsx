@@ -138,6 +138,107 @@ export function ArrowDownIcon(props: IconProps) {
   ))
 }
 
+export function CorazonIcon(props: IconProps) {
+  return base(props, (
+    <path d="M12 20.5C6.5 16.8 3 13.2 3 9.3 3 6.4 5.3 4 8.1 4c1.8 0 3.3 1 3.9 2.4C12.6 5 14.1 4 15.9 4 18.7 4 21 6.4 21 9.3c0 3.9-3.5 7.5-9 11.2Z" />
+  ))
+}
+
+export function CarritoIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M3 4h2.2l2.4 11a2 2 0 0 0 2 1.6h7a2 2 0 0 0 2-1.6L20.5 8H6.3" />
+      <circle cx="9.5" cy="20" r="1.4" />
+      <circle cx="17" cy="20" r="1.4" />
+    </>
+  ))
+}
+
+export function ComidaIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M6 2v6a1.5 1.5 0 0 0 3 0V2" />
+      <path d="M7.5 2v20" />
+      <path d="M16.5 2c-1.7 0-3 2-3 5s1.3 5 3 5" />
+      <path d="M16.5 2v20" />
+    </>
+  ))
+}
+
+export function AutoIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M4 16V11.5l2-4.5a2 2 0 0 1 1.8-1h8.4a2 2 0 0 1 1.8 1l2 4.5V16" />
+      <path d="M4 16h16v3H4Z" />
+      <path d="M4 11.5h16" />
+      <circle cx="7.5" cy="16" r="1.3" />
+      <circle cx="16.5" cy="16" r="1.3" />
+    </>
+  ))
+}
+
+export function RegaloIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M4 9h16v4H4Z" />
+      <path d="M5 13h14v8H5Z" />
+      <path d="M12 9v12" />
+      <path d="M12 9c-1-2.5-3-4-4.5-3S6 9 8 9" />
+      <path d="M12 9c1-2.5 3-4 4.5-3S18 9 16 9" />
+    </>
+  ))
+}
+
+export function MaletaIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M4 8h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z" />
+      <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+      <path d="M4 13h16" />
+    </>
+  ))
+}
+
+export function CruzIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 8v8M8 12h8" />
+    </>
+  ))
+}
+
+export function MusicaIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M9 18V4.5L20 3v13.5" />
+      <circle cx="6.5" cy="18" r="2.5" />
+      <circle cx="17.5" cy="16.5" r="2.5" />
+    </>
+  ))
+}
+
+export function LibroIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <path d="M4 5.5S6 4 12 4s8 1.5 8 1.5v14S18 18 12 18s-8 1.5-8 1.5Z" />
+      <path d="M12 4v14" />
+    </>
+  ))
+}
+
+export function MascotaIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <ellipse cx="12" cy="16.6" rx="4.4" ry="3.5" />
+      <circle cx="6.6" cy="10" r="1.7" />
+      <circle cx="9.7" cy="6.3" r="1.4" />
+      <circle cx="14.3" cy="6.3" r="1.4" />
+      <circle cx="17.4" cy="10" r="1.7" />
+    </>
+  ))
+}
+
 export function LapizIcon(props: IconProps) {
   return base(props, (
     <>
@@ -174,6 +275,16 @@ const ICONOS: Record<SobreIcono, (props: IconProps) => React.ReactElement> = {
   escudo: EscudoIcon,
   casa: CasaIcon,
   estrella: EstrellaIcon,
+  corazon: CorazonIcon,
+  carrito: CarritoIcon,
+  comida: ComidaIcon,
+  auto: AutoIcon,
+  regalo: RegaloIcon,
+  maleta: MaletaIcon,
+  cruz: CruzIcon,
+  musica: MusicaIcon,
+  libro: LibroIcon,
+  mascota: MascotaIcon,
 }
 
 /** Devuelve el componente de ícono correspondiente a un SobreIcono. */
