@@ -56,6 +56,7 @@ interface FormSobre {
   color: Sobre['color']
   icono: SobreIcono
   saldo: string
+  meta: string
 }
 
 const FORM_VACIO: FormSobre = {
@@ -65,6 +66,7 @@ const FORM_VACIO: FormSobre = {
   color: 'green',
   icono: 'hoja',
   saldo: '0',
+  meta: '',
 }
 
 interface FilaSobreProps {
@@ -217,6 +219,7 @@ export function GestionSobres() {
       color: sobre.color,
       icono: sobre.icono,
       saldo: String(sobre.saldoActual),
+      meta: sobre.meta !== undefined ? String(sobre.meta) : '',
     })
     setMenuAbiertoId(null)
     setModalAbierto(true)
@@ -225,6 +228,17 @@ export function GestionSobres() {
   function guardar() {
     const p = Number(form.prioridad)
     if (!form.nombre.trim() || !(p > 0)) return
+
+    const metaTexto = form.meta.trim()
+    let meta: number | undefined
+    if (metaTexto === '') {
+      meta = undefined
+    } else {
+      const metaNum = Number(metaTexto)
+      if (!(metaNum > 0)) return
+      meta = Math.round(metaNum)
+    }
+
     if (form.editandoId) {
       const saldoNum = Number(form.saldo)
       actualizarSobre(form.editandoId, {
@@ -232,10 +246,17 @@ export function GestionSobres() {
         prioridad: p,
         color: form.color,
         icono: form.icono,
+        meta,
         ...(Number.isFinite(saldoNum) ? { saldoActual: Math.round(saldoNum) } : {}),
       })
     } else {
-      agregarSobre({ nombre: form.nombre.trim(), color: form.color, icono: form.icono, prioridad: p })
+      agregarSobre({
+        nombre: form.nombre.trim(),
+        color: form.color,
+        icono: form.icono,
+        prioridad: p,
+        meta,
+      })
     }
     setModalAbierto(false)
   }
@@ -357,6 +378,23 @@ export function GestionSobres() {
                   </button>
                 )
               })}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[12.5px] font-semibold text-ink-soft">
+              Meta de ahorro (opcional)
+            </label>
+            <input
+              type="number"
+              value={form.meta}
+              onChange={(e) => setForm((f) => ({ ...f, meta: e.target.value }))}
+              placeholder="Monto objetivo, ej. 500000"
+              className="rounded-xl border border-border px-3 py-2.5 text-sm outline-none placeholder:text-ink-faint"
+            />
+            <div className="text-[11px] text-ink-faint">
+              Si defines una meta, el sobre muestra una barra de progreso hacia ese monto. Dejalo
+              vacío para quitarla.
             </div>
           </div>
           {form.editandoId && (

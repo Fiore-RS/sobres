@@ -1,9 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSobresStore } from '../lib/store'
 import { formatColones } from '../lib/format'
 import { SobreCard } from '../assets/components/molecules/SobreCard'
 import { Button } from '../assets/components/atoms/Button'
-import { LapizIcon, PlusIcon } from '../assets/components/atoms/Icon'
+import { PlusIcon } from '../assets/components/atoms/Icon'
 
 export function Inicio() {
   const navigate = useNavigate()
@@ -14,31 +14,13 @@ export function Inicio() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex shrink-0 flex-col gap-3.5 px-5 pt-6 pb-3">
-        <div className="flex items-center justify-between">
-          <div className="font-display font-semibold text-sm tracking-[0.14em] text-green">
-            SOBRES
-          </div>
-          <Link
-            to="/sobres"
-            className="flex items-center gap-1.5 rounded-full bg-surface-2 px-3 py-1.5 text-ink-soft"
-          >
-            <LapizIcon size={13} />
-            <span className="text-[12px] font-semibold">Editar sobres</span>
-          </Link>
+        <div className="font-display font-semibold text-sm tracking-[0.14em] text-green">
+          SOBRES
         </div>
         <div>
           <div className="mb-0.5 text-[12.5px] text-ink-faint">Total repartido</div>
           <div className="font-display font-semibold text-[32px]">{formatColones(total)}</div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 px-5 pb-4">
-        {activos.map((sobre) => (
-          <SobreCard key={sobre.id} sobre={sobre} />
-        ))}
-      </div>
-
-      <div className="px-5 pb-8">
         <Button
           variant="solid-green"
           className="w-full"
@@ -47,6 +29,12 @@ export function Inicio() {
         >
           Nuevo ingreso
         </Button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto no-scrollbar grid grid-cols-2 content-start gap-3 px-5 pb-8">
+        {activos.map((sobre) => (
+          <SobreCard key={sobre.id} sobre={sobre} />
+        ))}
       </div>
     </div>
   )

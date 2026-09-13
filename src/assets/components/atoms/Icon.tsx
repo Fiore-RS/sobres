@@ -248,6 +248,15 @@ export function LapizIcon(props: IconProps) {
   ))
 }
 
+export function SobresIcon(props: IconProps) {
+  return base(props, (
+    <>
+      <rect x="3" y="5.5" width="18" height="13" rx="2" />
+      <path d="M3.5 6.5L12 13l8.5-6.5" />
+    </>
+  ))
+}
+
 export function DownloadIcon(props: IconProps) {
   return base(props, (
     <>

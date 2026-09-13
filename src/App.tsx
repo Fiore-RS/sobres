@@ -53,13 +53,13 @@ function App() {
         <Routes>
           <Route element={<LayoutConNav />}>
             <Route path="/" element={<Inicio />} />
+            <Route path="/sobres" element={<GestionSobres />} />
             <Route path="/historial" element={<Historial />} />
             <Route path="/configuracion" element={<Configuracion />} />
           </Route>
           <Route element={<LayoutSinNav />}>
             <Route path="/nuevo-ingreso" element={<NuevoIngreso />} />
             <Route path="/nuevo-gasto" element={<NuevoGasto />} />
-            <Route path="/sobres" element={<GestionSobres />} />
             <Route path="/sobres/:id" element={<DetalleSobre />} />
           </Route>
         </Routes>

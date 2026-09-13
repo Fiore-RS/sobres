@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { ClockIcon, SlidersIcon } from '../atoms/Icon'
+import { ClockIcon, SlidersIcon, SobresIcon } from '../atoms/Icon'
 import { CasaIcon } from '../atoms/Icon'
 
 const ITEMS = [
   { to: '/', label: 'Inicio', Icon: CasaIcon },
+  { to: '/sobres', label: 'Sobres', Icon: SobresIcon },
   { to: '/historial', label: 'Historial', Icon: ClockIcon },
   { to: '/configuracion', label: 'Ajustes', Icon: SlidersIcon },
 ]
