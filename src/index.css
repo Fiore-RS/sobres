@@ -34,6 +34,14 @@ html,
 body,
 #root {
   height: 100%;
+  /* Evita que el documento en sí pueda hacer scroll o rebotar (bounce) en
+     móviles. Sin esto, algunos navegadores (sobre todo iOS Safari) permiten
+     que la página completa se desplace un poco, y como el marco de la app
+     usa "position: fixed", eso hace que los elementos fijos (como el botón
+     "Agregar sobre") se vean saltar o desalinearse durante el scroll. Todo
+     el scroll real ocurre dentro de los contenedores .no-scrollbar. */
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -47,6 +55,9 @@ body {
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  /* Evita que un scroll que llega al tope/final "se pase" hacia el documento
+     (que ya está bloqueado arriba, pero esto también evita el rebote visual). */
+  overscroll-behavior: contain;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
