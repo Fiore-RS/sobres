@@ -71,10 +71,25 @@ const FORM_VACIO: FormSobre = {
 
 interface FilaSobreProps {
   sobre: Sobre
+  menuAbierto: boolean
+  abrirHaciaArriba: boolean
   onToggleMenu: () => void
+  onCerrarMenu: () => void
+  onEditar: () => void
+  onArchivar: () => void
+  onEliminar: () => void
 }
 
-function FilaSobre({ sobre, onToggleMenu }: FilaSobreProps) {
+function FilaSobre({
+  sobre,
+  menuAbierto,
+  abrirHaciaArriba,
+  onToggleMenu,
+  onCerrarMenu,
+  onEditar,
+  onArchivar,
+  onEliminar,
+}: FilaSobreProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: sobre.id,
   })
@@ -113,14 +128,56 @@ function FilaSobre({ sobre, onToggleMenu }: FilaSobreProps) {
         {formatPorcentaje(sobre.prioridad)}
       </div>
 
-      <button
-        type="button"
-        onClick={onToggleMenu}
-        aria-label={`Opciones de ${sobre.nombre}`}
-        className="flex h-7 w-7 shrink-0 items-center justify-center text-ink-faint"
-      >
-        <DotsIcon size={15} />
-      </button>
+      <div className="relative shrink-0">
+        <button
+          type="button"
+          onClick={onToggleMenu}
+          aria-label={`Opciones de ${sobre.nombre}`}
+          className="flex h-7 w-7 items-center justify-center text-ink-faint"
+        >
+          <DotsIcon size={15} />
+        </button>
+
+        {menuAbierto && (
+          <>
+            <button
+              type="button"
+              aria-label="Cerrar menú"
+              onClick={onCerrarMenu}
+              className="fixed inset-0 z-10 cursor-default"
+            />
+            <div
+              className={`absolute right-0 z-20 flex w-36 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-lg ${
+                abrirHaciaArriba ? 'bottom-full mb-1' : 'top-full mt-1'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={onEditar}
+                className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                onClick={onArchivar}
+                className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+              >
+                Archivar
+              </button>
+              {sobre.saldoActual === 0 && (
+                <button
+                  type="button"
+                  onClick={onEliminar}
+                  className="px-3.5 py-2.5 text-left text-[13px] font-medium hover:bg-surface-2"
+                >
+                  Eliminar
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -141,8 +198,6 @@ export function GestionSobres() {
   const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null)
   const [modalAbierto, setModalAbierto] = useState(false)
   const [form, setForm] = useState<FormSobre>(FORM_VACIO)
-
-  const sobreMenu = activos.find((s) => s.id === menuAbiertoId)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -242,11 +297,19 @@ export function GestionSobres() {
             items={activos.map((s) => s.id)}
             strategy={verticalListSortingStrategy}
           >
-            {activos.map((sobre) => (
+            {activos.map((sobre, index) => (
               <FilaSobre
                 key={sobre.id}
                 sobre={sobre}
-                onToggleMenu={() => setMenuAbiertoId(sobre.id)}
+                menuAbierto={menuAbiertoId === sobre.id}
+                abrirHaciaArriba={index >= activos.length - 2}
+                onToggleMenu={() =>
+                  setMenuAbiertoId((prev) => (prev === sobre.id ? null : sobre.id))
+                }
+                onCerrarMenu={() => setMenuAbiertoId(null)}
+                onEditar={() => abrirModalEditar(sobre)}
+                onArchivar={() => archivar(sobre)}
+                onEliminar={() => eliminar(sobre)}
               />
             ))}
           </SortableContext>
@@ -366,36 +429,6 @@ export function GestionSobres() {
             <Button variant="solid-green" className="flex-1" onClick={guardar}>
               Guardar
             </Button>
-          </div>
-        </Modal>
-      )}
-
-      {sobreMenu && (
-        <Modal titulo={sobreMenu.nombre} onCerrar={() => setMenuAbiertoId(null)}>
-          <div className="flex flex-col gap-2.5">
-            <button
-              type="button"
-              onClick={() => abrirModalEditar(sobreMenu)}
-              className="rounded-2xl border border-border px-4 py-3.5 text-left text-sm font-semibold"
-            >
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => archivar(sobreMenu)}
-              className="rounded-2xl border border-border px-4 py-3.5 text-left text-sm font-semibold"
-            >
-              Archivar
-            </button>
-            {sobreMenu.saldoActual === 0 && (
-              <button
-                type="button"
-                onClick={() => eliminar(sobreMenu)}
-                className="rounded-2xl border-[1.5px] border-red-400 px-4 py-3.5 text-left text-sm font-semibold text-red-500"
-              >
-                Eliminar
-              </button>
-            )}
           </div>
         </Modal>
       )}
