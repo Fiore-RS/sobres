@@ -38,3 +38,15 @@ npm run build    # build de producción
 npm run preview  # previsualizar el build
 npm run lint      # oxlint
 ```
+
+## Despliegue
+
+El sitio se publica en GitHub Pages en `https://fiore-rs.github.io/sobres/`.
+
+Cada push a `main` dispara el workflow en `.github/workflows/deploy.yml`, que
+instala dependencias, corre `npm run build` y publica el contenido de `dist/`.
+No hace falta ningún paso manual aparte de pushear.
+
+La única configuración única (por si el repo todavía no la tiene) es en
+GitHub: **Settings → Pages → Build and deployment → Source: "GitHub
+Actions"**.

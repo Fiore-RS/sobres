@@ -30,9 +30,24 @@
   --font-sans: "IBM Plex Sans", sans-serif;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  background: var(--color-bg);
+  background: var(--color-surface-2);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+/* Oculta la barra de scroll nativa dentro de la app (mantiene el scroll funcional). */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
