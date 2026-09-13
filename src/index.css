@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/*
+  Paleta y tipografía definidas en la especificación de diseño
+  (ver docs/sobres-especificacion-desde-cero.md y los mockups).
+  Los tokens de --color-* quedan disponibles como clases de Tailwind
+  automáticamente (ej. bg-green, text-celeste-mid, border-border).
+*/
+@theme {
+  --color-bg: oklch(97% 0.012 85);
+  --color-surface: oklch(99% 0.006 85);
+  --color-surface-2: oklch(94% 0.014 85);
+
+  --color-ink: oklch(24% 0.03 160);
+  --color-ink-soft: oklch(48% 0.02 160);
+  --color-ink-faint: oklch(63% 0.015 160);
+
+  --color-green: oklch(38% 0.09 152);
+  --color-green-mid: oklch(55% 0.1 152);
+  --color-green-soft: oklch(91% 0.035 152);
+
+  --color-celeste: oklch(50% 0.09 227);
+  --color-celeste-mid: oklch(62% 0.1 227);
+  --color-celeste-soft: oklch(91% 0.03 227);
+
+  --color-border: oklch(89% 0.015 160);
+
+  --font-display: "Fraunces", serif;
+  --font-sans: "IBM Plex Sans", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
