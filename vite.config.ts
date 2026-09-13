@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => ({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png', 'splash/*.png'],
       manifest: {
         name: 'Sobres',
         short_name: 'Sobres',
@@ -36,7 +36,7 @@ export default defineConfig(({ command }) => ({
             type: 'image/png',
           },
           {
-            src: 'icons/icon-512.png',
+            src: 'icons/icon-512-maskable.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
