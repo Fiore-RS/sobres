@@ -9,7 +9,7 @@ interface ModalProps {
 /** Popup centrado con fondo oscurecido. Clic en el fondo cierra el modal. */
 export function Modal({ titulo, onCerrar, children }: ModalProps) {
   return (
-    <div className="fixed inset-0 z-30 flex items-end justify-center bg-ink/40 px-5 py-6 sm:items-center">
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-ink/40 px-5 py-6">
       <button
         type="button"
         aria-label="Cerrar"
