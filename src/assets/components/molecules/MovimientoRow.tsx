@@ -21,11 +21,13 @@ export function MovimientoRow({ movimiento, sobres, sobreIdFiltro }: MovimientoR
     ? 'Ingreso repartido'
     : sobres.find((s) => s.id === movimiento.sobresParticipantes[0]?.sobreId)?.nombre ?? 'Ajuste'
 
+  const sobresDelIngreso = movimiento.sobresParticipantes
+    .map((p) => sobres.find((s) => s.id === p.sobreId)?.nombre)
+    .filter(Boolean)
+    .join(', ')
+
   const subtitulo = esIngreso
-    ? movimiento.sobresParticipantes
-        .map((p) => sobres.find((s) => s.id === p.sobreId)?.nombre)
-        .filter(Boolean)
-        .join(', ')
+    ? [movimiento.nota, sobresDelIngreso].filter(Boolean).join(' · ')
     : movimiento.nota ?? '—'
 
   return (
