@@ -26,18 +26,24 @@ export function MovimientoRow({ movimiento, sobres, sobreIdFiltro }: MovimientoR
     .filter(Boolean)
     .join(', ')
 
+  // Dentro del detalle de un sobre específico (sobreIdFiltro) no repetimos la
+  // lista de los demás sobres participantes — ya estás viendo ese sobre en
+  // particular, y mencionar a los otros solo genera confusión sobre a cuál
+  // corresponde el monto mostrado.
   const subtitulo = esIngreso
-    ? [movimiento.nota, sobresDelIngreso].filter(Boolean).join(' · ')
+    ? sobreIdFiltro
+      ? movimiento.nota ?? '—'
+      : [movimiento.nota, sobresDelIngreso].filter(Boolean).join(' · ')
     : movimiento.nota ?? '—'
 
   return (
-    <div className="flex items-center gap-3 border-b border-border py-3 last:border-b-0">
+    <div className="flex items-start gap-3 border-b border-border py-3 last:border-b-0">
       <IconBadge color={esIngreso ? 'green' : 'celeste'} size={34}>
-        {esIngreso ? <ArrowUpIcon size={16} /> : <ArrowDownIcon size={16} />}
+        {esIngreso ? <ArrowDownIcon size={16} /> : <ArrowUpIcon size={16} />}
       </IconBadge>
       <div className="min-w-0 flex-1">
         <div className="text-[13.5px] font-semibold">{titulo}</div>
-        <div className="truncate text-[11px] text-ink-faint">
+        <div className="text-[11px] text-ink-faint">
           {subtitulo} &middot; {formatFecha(movimiento.fecha)}
         </div>
       </div>
